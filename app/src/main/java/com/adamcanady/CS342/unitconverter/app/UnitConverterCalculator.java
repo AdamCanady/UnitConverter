@@ -88,8 +88,6 @@ public class UnitConverterCalculator {
             return (double) 0;
         }
 
-        double output = input / input_conversion * output_conversion;
-
-        return output;
+        return input / input_conversion * output_conversion;
     }
 }

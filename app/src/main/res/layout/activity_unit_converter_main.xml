@@ -17,23 +17,24 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-        <!--input text-->
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/input_text"
-            android:layout_gravity="bottom"
-            android:layout_weight=".3"/>
 
-        <!--input units-->
-        <Spinner
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/input_units"
-            android:layout_weight=".7"
-            android:layout_gravity="bottom"/>
+            <!--input text-->
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:id="@+id/input_text"
+                android:layout_gravity="bottom"
+                android:layout_weight=".3"/>
+
+            <!--input units-->
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/input_units"
+                android:layout_weight=".7"
+                android:layout_gravity="bottom"/>
 
         </LinearLayout>
 
@@ -41,23 +42,24 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-        <!--output text-->
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:gravity="bottom"
-            android:id="@+id/output_text"
-            android:layout_gravity="bottom"
-            android:layout_weight=".3"/>
 
-        <!--output units-->
-        <Spinner
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/output_units"
-            android:layout_weight=".7"
-            android:layout_gravity="bottom"/>
+            <!--output text-->
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:gravity="bottom"
+                android:id="@+id/output_text"
+                android:layout_gravity="bottom"
+                android:layout_weight=".3"/>
+
+            <!--output units-->
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/output_units"
+                android:layout_weight=".7"
+                android:layout_gravity="bottom"/>
 
         </LinearLayout>
     </LinearLayout>
