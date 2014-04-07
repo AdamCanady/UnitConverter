@@ -1,5 +1,7 @@
 package com.adamcanady.CS342.unitconverter.app;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,21 +66,26 @@ public class UnitConverterCalculator {
         double input_conversion = 0;
         double output_conversion = 0;
 
-        if(mode==0){ // Volume
-            input_conversion = this.volume.get(input_unit);
-            output_conversion = this.volume.get(output_unit);
-        } else if (mode == 1){ // Mass
-            input_conversion = this.mass.get(input_unit);
-            output_conversion = this.mass.get(output_unit);
-        } else if (mode == 2){ // Distance
-            input_conversion = this.distance.get(input_unit);
-            output_conversion = this.distance.get(output_unit);
-        } else if (mode == 3){ // Data
-            input_conversion = this.data.get(input_unit);
-            output_conversion = this.data.get(output_unit);
-        } else if (mode == 4){ // Area
-            input_conversion = this.area.get(input_unit);
-            output_conversion = this.area.get(output_unit);
+        try {
+            if (mode == 0) { // Volume
+                input_conversion = this.volume.get(input_unit);
+                output_conversion = this.volume.get(output_unit);
+            } else if (mode == 1) { // Mass
+                input_conversion = this.mass.get(input_unit);
+                output_conversion = this.mass.get(output_unit);
+            } else if (mode == 2) { // Distance
+                input_conversion = this.distance.get(input_unit);
+                output_conversion = this.distance.get(output_unit);
+            } else if (mode == 3) { // Data
+                input_conversion = this.data.get(input_unit);
+                output_conversion = this.data.get(output_unit);
+            } else if (mode == 4) { // Area
+                input_conversion = this.area.get(input_unit);
+                output_conversion = this.area.get(output_unit);
+            }
+        } catch (NullPointerException e) {
+            Log.d("Debug: ","Caught Null Pointer Exception in convert_units");
+            return (double) 0;
         }
 
         double output = input / input_conversion * output_conversion;

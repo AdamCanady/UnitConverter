@@ -6,6 +6,7 @@
     <string name="mode_mass">Mass</string>
     <string name="mode_distance">Distance</string>
     <string name="mode_data">Data</string>
+    <string name="mode_area">Area</string>
     <string name="action_settings">Settings</string>
 
 </resources>
