@@ -81,8 +81,6 @@ public class UnitConverterCalculator {
             output_conversion = this.area.get(output_unit);
         }
 
-        double output = input / input_conversion * output_conversion;
-
-        return output;
+        return input / input_conversion * output_conversion;
     }
 }
