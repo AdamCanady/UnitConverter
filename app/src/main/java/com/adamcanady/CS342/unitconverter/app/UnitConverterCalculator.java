@@ -47,11 +47,11 @@ public class UnitConverterCalculator {
 
         this.data = new HashMap<String, Double>();
         this.data.put("byte", 1.0);
-        this.data.put("kb",1024.0);
-        this.data.put("mb",1048576.0);
-        this.data.put("gb",1073741824.0);
-        this.data.put("tb",1099511627776.0);
-        this.data.put("pb",1125899906842624.0);
+        this.data.put("kb",1/1024.0);
+        this.data.put("mb",1/1048576.0);
+        this.data.put("gb",1/1073741824.0);
+        this.data.put("tb",1/1099511627776.0);
+        this.data.put("pb",1/1125899906842624.0);
 
         this.area = new HashMap<String, Double>();
         this.area.put("sqm", 1.0);
@@ -67,16 +67,16 @@ public class UnitConverterCalculator {
         double output_conversion = 0;
 
         try {
-            if (mode == 0) { // Volume
+            if (mode == 3) { // Volume
                 input_conversion = this.volume.get(input_unit);
                 output_conversion = this.volume.get(output_unit);
-            } else if (mode == 1) { // Mass
+            } else if (mode == 2) { // Mass
                 input_conversion = this.mass.get(input_unit);
                 output_conversion = this.mass.get(output_unit);
-            } else if (mode == 2) { // Distance
+            } else if (mode == 1) { // Distance
                 input_conversion = this.distance.get(input_unit);
                 output_conversion = this.distance.get(output_unit);
-            } else if (mode == 3) { // Data
+            } else if (mode == 0) { // Data
                 input_conversion = this.data.get(input_unit);
                 output_conversion = this.data.get(output_unit);
             } else if (mode == 4) { // Area

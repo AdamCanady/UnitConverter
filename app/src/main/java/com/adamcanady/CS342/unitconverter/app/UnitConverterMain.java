@@ -3,6 +3,8 @@ package com.adamcanady.CS342.unitconverter.app;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,6 +90,8 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         // Bind UI objects
         input_text = (EditText) findViewById(R.id.input_text);
         output_text = (EditText) findViewById(R.id.output_text);
+        input_text.setOnKeyListener(null); // make the edittexts not editable
+        output_text.setOnKeyListener(null);
 
         input_units = (Spinner) findViewById(R.id.input_units);
         output_units = (Spinner) findViewById(R.id.output_units);
@@ -134,7 +138,7 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         areaUnitArray.add("acre");
 
         // from: http://stackoverflow.com/questions/11920754/android-fill-spinner-from-java-code-programmatically
-        unitAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, massUnitArray);
+        unitAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         input_units.setAdapter(unitAdapter);
@@ -163,6 +167,7 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         }
         // update text of input box
         input_text.setText(current_input);
+        input_text.setSelection(input_text.getText().length());
 
         // Try to do calculation and update output box
         update_results();
@@ -189,6 +194,13 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         } else {
             output_text.setText("");
         }
+
+//        // scale text to fit
+//        String t = output_text.getText().toString();
+//        TextPaint paint = output_text.getPaint();
+//        while (paint.measureText(t) > output_text.getWidth()) {
+//            paint.setTextSize(paint.getTextSize() - 1);
+//        }
     }
 
     @Override
@@ -245,7 +257,6 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
                 break;
             case 1: // distance
                 unitAdapter.addAll(distanceUnitArray);
-
                 break;
             case 2: // mass
                 unitAdapter.addAll(massUnitArray);
