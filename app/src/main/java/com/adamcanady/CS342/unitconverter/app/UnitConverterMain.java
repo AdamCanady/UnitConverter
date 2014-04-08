@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -153,6 +154,7 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
     }
 
     public void buttonClick(View v) {
+        Button dot;
         switch (v.getId()) {
             case R.id.button_0: current_input = current_input + "0"; break;
             case R.id.button_1: current_input = current_input + "1"; break;
@@ -164,8 +166,19 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
             case R.id.button_7: current_input = current_input + "7"; break;
             case R.id.button_8: current_input = current_input + "8"; break;
             case R.id.button_9: current_input = current_input + "9"; break;
-            case R.id.button_dot: current_input = current_input + "."; break;
-            case R.id.button_clear: current_input = ""; break;
+            case R.id.button_dot:
+                current_input = current_input + ".";
+                // disable the period if it has been typed
+
+                dot = (Button)findViewById(R.id.button_dot);
+                dot.setEnabled(false);
+                break;
+            case R.id.button_clear:
+                current_input = "";
+                // re-enable the period
+                dot = (Button)findViewById(R.id.button_dot);
+                dot.setEnabled(true);
+                break;
         }
         // update text of input box
         input_text.setText(current_input);
@@ -194,7 +207,8 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
             Double conversion = calc.convert_units(input_unit, output_unit, input, mode); // figure out how to get the text out of the buttons
             output_text.setText(conversion.toString());
         } else {
-            output_text.setText("0");
+            current_input = "0";
+            output_text.setText(current_input);
             input_text.setText("0");
             input_text.setSelection(input_text.getText().length());
         }
