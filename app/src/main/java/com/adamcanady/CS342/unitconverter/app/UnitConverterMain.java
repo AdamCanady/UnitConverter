@@ -159,14 +159,17 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
     protected void onResume(){
         super.onResume();
 
+        Log.d("debug", "onResume");
+
         SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
+
+        // modes
+        mode = settings.getInt("mode", 0);
+        this.onNavigationItemSelected(mode, 0);
 
         // input
         current_input = settings.getString("current_input", current_input);
-
-        // modes
-        mode = settings.getInt("mode", mode);
-        onNavigationItemSelected(mode, 0);
+        input_text.setText(current_input);
 
         int input_unit = 0;
         input_unit = settings.getInt("input_unit", input_unit);
@@ -179,6 +182,20 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         //update
         update_results();
 
+    }
+
+    public void onPause() {
+        // Save state
+        SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
+        SharedPreferences.Editor editor = settings.edit();
+
+        editor.putString("current_input", current_input);
+        editor.putInt("mode", mode);
+        editor.putInt("input_unit", input_units.getSelectedItemPosition());
+        editor.putInt("output_unit", output_units.getSelectedItemPosition());
+        editor.commit();
+
+        super.onPause();
     }
 
     public void buttonClick(View v) {
@@ -227,21 +244,22 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         // move cursor to end
         input_text.setSelection(input_text.getText().length());
 
-        // Save state
-        SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
-        SharedPreferences.Editor editor = settings.edit();
-
-        editor.putString("current_input", current_input);
-        editor.putInt("mode", mode);
-        editor.putInt("input_unit", input_units.getSelectedItemPosition());
-        editor.putInt("output_unit", output_units.getSelectedItemPosition());
-        editor.commit();
-
         // Try to do calculation and update output box
         update_results();
     }
 
     public void update_results(){
+
+//        // Save state
+//
+//        SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
+//        SharedPreferences.Editor editor = settings.edit();
+//
+//        editor.putString("current_input", current_input);
+//        editor.putInt("mode", mode);
+//        editor.putInt("input_unit", input_units.getSelectedItemPosition());
+//        editor.putInt("output_unit", output_units.getSelectedItemPosition(););
+//        editor.commit();
 
         // try to update conversion now that a button has been clicked if it makes sense
         if(!current_input.equals("")){
