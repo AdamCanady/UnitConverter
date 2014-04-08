@@ -181,7 +181,21 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
                 break;
         }
         // update text of input box
-        input_text.setText(current_input);
+        try {
+            // get rid of decimal if it is .0
+            double inputNumber;
+            inputNumber  = Double.parseDouble(current_input); // convert to a double then back to string to make it pretty
+            double decimal = inputNumber - (int)inputNumber;
+            if (decimal == 0) {
+                input_text.setText(Integer.toString((int)inputNumber));
+            }
+            else {
+                input_text.setText(Double.toString(inputNumber));
+            }
+        } catch (NumberFormatException e) {
+            input_text.setText(Integer.toString(0));
+        }
+        // move cursor to end
         input_text.setSelection(input_text.getText().length());
 
         // Try to do calculation and update output box
@@ -191,7 +205,16 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
     public void update_results(){
 
         // try to update conversion now that a button has been clicked if it makes sense
-        if(current_input != ""){
+        if(!current_input.equals("")){
+//            double input;
+//            if (current_input.equals("0")) {
+//                current_input = "";
+//                input_text.setText("");
+//                input = 0;
+//            }
+//            else {
+//                input = Double.parseDouble(current_input);
+//            }
             double input = Double.parseDouble(current_input);
 
             String input_unit;
@@ -204,21 +227,22 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
                 input_unit = "";
                 output_unit = "";
             }
-            Double conversion = calc.convert_units(input_unit, output_unit, input, mode); // figure out how to get the text out of the buttons
-            output_text.setText(conversion.toString());
+            double conversion = calc.convert_units(input_unit, output_unit, input, mode); // figure out how to get the text out of the buttons
+
+            // format the output string (i.e. get rid of decimal if it is .0)
+            double decimal = conversion - (int)conversion;
+            if (decimal == 0) {
+                output_text.setText(Integer.toString((int)conversion));
+            }
+            else {
+                output_text.setText(Double.toString(conversion));
+            }
         } else {
             current_input = "0";
             output_text.setText(current_input);
             input_text.setText("0");
             input_text.setSelection(input_text.getText().length());
         }
-
-//        // scale text to fit
-//        String t = output_text.getText().toString();
-//        TextPaint paint = output_text.getPaint();
-//        while (paint.measureText(t) > output_text.getWidth()) {
-//            paint.setTextSize(paint.getTextSize() - 1);
-//        }
     }
 
     @Override
