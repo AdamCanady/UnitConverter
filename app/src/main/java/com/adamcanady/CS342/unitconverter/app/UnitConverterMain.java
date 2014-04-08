@@ -3,6 +3,7 @@ package com.adamcanady.CS342.unitconverter.app;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -28,6 +29,10 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
      * current dropdown position.
      */
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+    public static final String PREFERENCES = "SharedPreferences";
+
+    public SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
+    public SharedPreferences.Editor editor = settings.edit();
 
     private String current_input = "";
     private Spinner input_units;
@@ -153,6 +158,32 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
 
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
+
+        // input
+        current_input = settings.getString("current_input", current_input);
+
+        // modes
+        mode = settings.getInt("mode", mode);
+        onNavigationItemSelected(mode, 0);
+
+        int input_unit = 0;
+        input_unit = settings.getInt("input_unit", input_unit);
+        int output_unit = 0;
+        output_unit = settings.getInt("output_unit", output_unit);
+
+        input_units.setSelection(input_unit);
+        output_units.setSelection(output_unit);
+
+        //update
+        update_results();
+
+    }
+
     public void buttonClick(View v) {
         Button dot;
         switch (v.getId()) {
@@ -180,9 +211,17 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
                 dot.setEnabled(true);
                 break;
         }
+
         // update text of input box
         input_text.setText(current_input);
         input_text.setSelection(input_text.getText().length());
+
+        // Save state
+        editor.putString("current_input", current_input);
+        editor.putInt("mode", mode);
+        editor.putInt("input_unit", input_units.getSelectedItemPosition());
+        editor.putInt("output_unit", output_units.getSelectedItemPosition());
+        editor.commit();
 
         // Try to do calculation and update output box
         update_results();
@@ -192,6 +231,7 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
 
         // try to update conversion now that a button has been clicked if it makes sense
         if(current_input != ""){
+
             double input = Double.parseDouble(current_input);
 
             String input_unit;
