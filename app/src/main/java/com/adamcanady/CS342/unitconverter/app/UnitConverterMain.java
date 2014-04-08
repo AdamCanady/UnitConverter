@@ -2,6 +2,7 @@ package com.adamcanady.CS342.unitconverter.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,7 +194,9 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
             Double conversion = calc.convert_units(input_unit, output_unit, input, mode); // figure out how to get the text out of the buttons
             output_text.setText(conversion.toString());
         } else {
-            output_text.setText("");
+            output_text.setText("0");
+            input_text.setText("0");
+            input_text.setSelection(input_text.getText().length());
         }
 
 //        // scale text to fit
@@ -228,13 +232,24 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_share) {
+            String message = input_text.getText().toString() + " " + input_units.getSelectedItem().toString() + "s in " +
+                    output_units.getSelectedItem().toString() + "s is " +
+                    output_text.getText().toString() + " " + output_units.getSelectedItem().toString() + "s";
+            Intent shareIntent = new Intent();
+            shareIntent.setType("text/plain");
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Unit Conversion Results");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+            startActivity(Intent.createChooser(shareIntent, "Share to..."));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -276,40 +291,4 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         Log.d("debug", "position: "+position);
         return true;
     }
-
-//    /**
-//     * A placeholder fragment containing a simple view.
-//     */
-//    public static class PlaceholderFragment extends Fragment {
-//        /**
-//         * The fragment argument representing the section number for this
-//         * fragment.
-//         */
-//        private static final String ARG_SECTION_NUMBER = "section_number";
-//
-//        /**
-//         * Returns a new instance of this fragment for the given section
-//         * number.
-//         */
-//        public static PlaceholderFragment newInstance(int sectionNumber) {
-//            PlaceholderFragment fragment = new PlaceholderFragment();
-//            Bundle args = new Bundle();
-//            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-//            fragment.setArguments(args);
-//            return fragment;
-//        }
-//
-//        public PlaceholderFragment() {
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                Bundle savedInstanceState) {
-//            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-//            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-//            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-//            return rootView;
-//        }
-//    }
-
 }
