@@ -31,9 +31,6 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
     public static final String PREFERENCES = "SharedPreferences";
 
-    public SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
-    public SharedPreferences.Editor editor = settings.edit();
-
     private String current_input = "";
     private Spinner input_units;
     private Spinner output_units;
@@ -231,6 +228,9 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         input_text.setSelection(input_text.getText().length());
 
         // Save state
+        SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
+        SharedPreferences.Editor editor = settings.edit();
+
         editor.putString("current_input", current_input);
         editor.putInt("mode", mode);
         editor.putInt("input_unit", input_units.getSelectedItemPosition());
