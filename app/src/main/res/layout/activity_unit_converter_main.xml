@@ -26,6 +26,7 @@
                 android:ems="10"
                 android:id="@+id/input_text"
                 android:layout_gravity="bottom"
+                android:focusable="false"
                 android:layout_weight=".3"/>
 
             <!--input units-->

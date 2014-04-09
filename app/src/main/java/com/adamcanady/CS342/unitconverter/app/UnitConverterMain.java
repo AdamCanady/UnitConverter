@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,6 +30,10 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
      * current dropdown position.
      */
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+    private static final String STATE_SELECTED_INPUT_UNIT = "selected_input_unit";
+    private static final String STATE_SELECTED_OUTPUT_UNIT = "selected_output_unit";
+    private static final String STATE_INPUT_TEXT = "input_text";
+    private static final String STATE_OUTPUT_TEXT = "output_text";
     public static final String PREFERENCES = "SharedPreferences";
 
     private String current_input = "";
@@ -69,6 +74,8 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_unit_converter_main);
 
         // Set up the action bar to show a dropdown list.
@@ -151,45 +158,68 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
 
         input_units.setOnItemSelectedListener(itemSelectedListener);
         output_units.setOnItemSelectedListener(itemSelectedListener);
-
-
     }
 
-    @Override
+        @Override
     protected void onResume(){
         super.onResume();
 
-        Log.d("debug", "onResume");
+        // read back persistent state
 
-        SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         // modes
         mode = settings.getInt("mode", 0);
-        this.onNavigationItemSelected(mode, 0);
+        getActionBar().setSelectedNavigationItem(mode);
 
-        // input
-        current_input = settings.getString("current_input", current_input);
+
+        final int input_unit = settings.getInt("input_unit", 0);
+        final int output_unit = settings.getInt("output_unit", 0);
+
+        // from http://stackoverflow.com/questions/1484528/android-setselection-having-no-effect-on-spinner
+        // I think this works because it won't run until the view is created
+        input_units.post(new Runnable() {
+            @Override
+            public void run() {
+                input_units.setSelection(input_unit);
+            }
+        });
+        output_units.post(new Runnable() {
+            @Override
+            public void run() {
+                output_units.setSelection(output_unit);
+            }
+        });
+
+        // stupid hack to put a double in shared prefs
+        current_input = doubleToPrettyString(Double.longBitsToDouble(settings.getLong("current_input", 0)));
         input_text.setText(current_input);
 
-        int input_unit = 0;
-        input_unit = settings.getInt("input_unit", input_unit);
-        int output_unit = 0;
-        output_unit = settings.getInt("output_unit", output_unit);
 
-        input_units.setSelection(input_unit);
-        output_units.setSelection(output_unit);
-
-        //update
         update_results();
 
     }
 
+    public String doubleToPrettyString(double input) {
+        // format the output string (i.e. get rid of decimal if it is .0)
+        double decimal = input - (int)input;
+        String ret;
+        if (decimal == 0) {
+            ret = Integer.toString((int)input);
+        }
+        else {
+            ret = Double.toString(input);
+        }
+        return ret;
+    }
+
+
     public void onPause() {
-        // Save state
-        SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
+//        Save state
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
 
-        editor.putString("current_input", current_input);
+        editor.putLong("current_input", Double.doubleToRawLongBits(Double.parseDouble(current_input))); // because you can't put a double in sharedprefs
         editor.putInt("mode", mode);
         editor.putInt("input_unit", input_units.getSelectedItemPosition());
         editor.putInt("output_unit", output_units.getSelectedItemPosition());
@@ -229,15 +259,8 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         // update text of input box
         try {
             // get rid of decimal if it is .0
-            double inputNumber;
-            inputNumber  = Double.parseDouble(current_input); // convert to a double then back to string to make it pretty
-            double decimal = inputNumber - (int)inputNumber;
-            if (decimal == 0) {
-                input_text.setText(Integer.toString((int)inputNumber));
-            }
-            else {
-                input_text.setText(Double.toString(inputNumber));
-            }
+            double inputNumber = Double.parseDouble(current_input);
+            input_text.setText(doubleToPrettyString(inputNumber));
         } catch (NumberFormatException e) {
             input_text.setText(Integer.toString(0));
         }
@@ -250,28 +273,11 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
 
     public void update_results(){
 
-//        // Save state
-//
-//        SharedPreferences settings = getSharedPreferences(PREFERENCES, 0);
-//        SharedPreferences.Editor editor = settings.edit();
-//
-//        editor.putString("current_input", current_input);
-//        editor.putInt("mode", mode);
-//        editor.putInt("input_unit", input_units.getSelectedItemPosition());
-//        editor.putInt("output_unit", output_units.getSelectedItemPosition(););
-//        editor.commit();
+       // Save state
 
         // try to update conversion now that a button has been clicked if it makes sense
         if(!current_input.equals("")){
-//            double input;
-//            if (current_input.equals("0")) {
-//                current_input = "";
-//                input_text.setText("");
-//                input = 0;
-//            }
-//            else {
-//                input = Double.parseDouble(current_input);
-//            }
+
             double input = Double.parseDouble(current_input);
 
             String input_unit;
@@ -286,14 +292,8 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
             }
             double conversion = calc.convert_units(input_unit, output_unit, input, mode); // figure out how to get the text out of the buttons
 
-            // format the output string (i.e. get rid of decimal if it is .0)
-            double decimal = conversion - (int)conversion;
-            if (decimal == 0) {
-                output_text.setText(Integer.toString((int)conversion));
-            }
-            else {
-                output_text.setText(Double.toString(conversion));
-            }
+            output_text.setText(doubleToPrettyString(conversion));
+
         } else {
             current_input = "0";
             output_text.setText(current_input);
@@ -301,23 +301,6 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
             input_text.setSelection(input_text.getText().length());
         }
     }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Restore the previously serialized current dropdown position.
-        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-            getActionBar().setSelectedNavigationItem(
-                    savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        // Serialize the current dropdown position.
-        outState.putInt(STATE_SELECTED_NAVIGATION_ITEM,
-                getActionBar().getSelectedNavigationIndex());
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -352,11 +335,7 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
 
     @Override
     public boolean onNavigationItemSelected(int position, long id) {
-        // When the given dropdown item is selected, show its contents in the
-        // container view.
-//        getFragmentManager().beginTransaction()
-//                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-//                .commit();
+        // switch mode
         mode = position;
 
         unitAdapter.clear();
@@ -379,11 +358,10 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
                 break;
         }
 
-        current_input = "";
-        input_text.setText(current_input);
+//        current_input = "";
+     // input_text.setText(current_input);
         update_results();
 
-        Log.d("debug", "position: "+position);
         return true;
     }
 }
