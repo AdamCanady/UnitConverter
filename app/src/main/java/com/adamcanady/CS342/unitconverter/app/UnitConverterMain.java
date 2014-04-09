@@ -291,7 +291,7 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
                 output_unit = "";
             }
             double conversion = calc.convert_units(input_unit, output_unit, input, mode); // figure out how to get the text out of the buttons
-
+            conversion = Math.round(conversion * 100000.) / 100000.; // round to 6 decimal places
             output_text.setText(doubleToPrettyString(conversion));
 
         } else {
@@ -357,6 +357,9 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
                 unitAdapter.addAll(areaUnitArray);
                 break;
         }
+
+        input_units.setSelection(0);
+        output_units.setSelection(0);
 
 //        current_input = "";
      // input_text.setText(current_input);

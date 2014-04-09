@@ -21,10 +21,10 @@ public class UnitConverterCalculator {
         // initialize dictionaries
         this.volume = new HashMap<String, Double>();
         this.volume.put("l", 1.0);
-        this.volume.put("ml", 0.001);
-        this.volume.put("ul", 0.000001);
-        this.volume.put("qt", 0.946);
-        this.volume.put("oz", 0.029575);
+        this.volume.put("ml", 1/0.001);
+        this.volume.put("ul", 1/0.000001);
+        this.volume.put("qt", 1/0.946);
+        this.volume.put("oz", 1/0.029575);
 
         this.mass = new HashMap<String, Double>();
         this.mass.put("kg", 1.0);
@@ -36,14 +36,14 @@ public class UnitConverterCalculator {
 
         this.distance = new HashMap<String, Double>();
         this.distance.put("m", 1.0);
-        this.distance.put("km", 1000.0);
-        this.distance.put("cm", 0.01);
-        this.distance.put("mm", 0.001);
-        this.distance.put("um", 0.000001);
-        this.distance.put("nm", 0.000000001);
-        this.distance.put("mi", 1609.0);
-        this.distance.put("ft", 0.305);
-        this.distance.put("in", 0.0254);
+        this.distance.put("km", 1/1000.0);
+        this.distance.put("cm", 1/0.01);
+        this.distance.put("mm", 1/0.001);
+        this.distance.put("um", 1/0.000001);
+        this.distance.put("nm", 1/0.000000001);
+        this.distance.put("mi", 1/1609.0);
+        this.distance.put("ft", 1/0.305);
+        this.distance.put("in", 1/0.0254);
 
         this.data = new HashMap<String, Double>();
         this.data.put("byte", 1.0);
@@ -55,7 +55,7 @@ public class UnitConverterCalculator {
 
         this.area = new HashMap<String, Double>();
         this.area.put("sqm", 1.0);
-        this.area.put("sqkm", 0.00001);
+        this.area.put("sqkm", 0.000001);
         this.area.put("sqmi", 0.0000003861);
         this.area.put("acre", 0.0002471);
 
@@ -88,6 +88,7 @@ public class UnitConverterCalculator {
             return (double) 0;
         }
 
-        return input / input_conversion * output_conversion;
+        double result = input / input_conversion * output_conversion;
+        return result;
     }
 }
