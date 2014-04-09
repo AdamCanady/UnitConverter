@@ -109,15 +109,14 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         output_text.setOnKeyListener(null);
 
         // copy text to clipboard when touching the output view
-        output_text.setOnTouchListener(new View.OnTouchListener() {
+        output_text.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
                 EditText output = (EditText)view;
                 ClipData clip = ClipData.newPlainText("unit conversion", output.getText().toString());
                 clipboardManager.setPrimaryClip(clip);
                 Toast.makeText(getApplicationContext(), "Copied to clipboard", Toast.LENGTH_SHORT).show();
-                return true;
             }
         });
 
