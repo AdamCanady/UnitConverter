@@ -28,11 +28,11 @@ public class UnitConverterCalculator {
 
         this.mass = new HashMap<String, Double>();
         this.mass.put("kg", 1.0);
-        this.mass.put("g", 1000.0);
-        this.mass.put("mg", 1000000.0);
-        this.mass.put("ug", 1000000000.0);
-        this.mass.put("lb", 0.454);
-        this.mass.put("oz", 0.02834);
+        this.mass.put("g", 1/1000.0);
+        this.mass.put("mg", 1/1000000.0);
+        this.mass.put("ug", 1/1000000000.0);
+        this.mass.put("lb", 1/0.454);
+        this.mass.put("oz", 1/0.02834);
 
         this.distance = new HashMap<String, Double>();
         this.distance.put("m", 1.0);

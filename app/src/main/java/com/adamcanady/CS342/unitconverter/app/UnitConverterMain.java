@@ -2,6 +2,8 @@ package com.adamcanady.CS342.unitconverter.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -104,6 +107,19 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
         output_text = (EditText) findViewById(R.id.output_text);
         input_text.setOnKeyListener(null); // make the edittexts not editable
         output_text.setOnKeyListener(null);
+
+        // copy text to clipboard when touching the output view
+        output_text.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+                EditText output = (EditText)view;
+                ClipData clip = ClipData.newPlainText("unit conversion", output.getText().toString());
+                clipboardManager.setPrimaryClip(clip);
+                Toast.makeText(getApplicationContext(), "Copied to clipboard", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         input_units = (Spinner) findViewById(R.id.input_units);
         output_units = (Spinner) findViewById(R.id.output_units);
@@ -286,7 +302,7 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
             try {
                 input_unit = input_units.getSelectedItem().toString();
                 output_unit = output_units.getSelectedItem().toString();
-            } catch (NullPointerException e) {
+            } catch (Exception e) {
                 input_unit = "";
                 output_unit = "";
             }
@@ -357,9 +373,6 @@ public class UnitConverterMain extends Activity implements ActionBar.OnNavigatio
                 unitAdapter.addAll(areaUnitArray);
                 break;
         }
-
-        input_units.setSelection(0);
-        output_units.setSelection(0);
 
 //        current_input = "";
      // input_text.setText(current_input);
